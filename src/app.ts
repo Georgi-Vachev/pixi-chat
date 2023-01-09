@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Button } from './button';
+import { ChatWindow } from './chatWindow';
 import { InputField } from './inputField';
 import { createSpritesContainer, createTiles } from './util';
 
@@ -50,8 +51,13 @@ async function start() {
     const txtInputContainer = new PIXI.Container();
     const btnContainer = new PIXI.Container();
 
+    const chatWindow = new ChatWindow(
+        messages,
+        createSpritesContainer(bevelTextures, 750, 475, 0x78a8f5)
+    )
+
     const inputField = new InputField(
-        currentInput,
+        "",
         () => { console.log('test') },
         createSpritesContainer(bevelTextures, 575, 50, 0x78a8f5),
         createSpritesContainer(bevelTextures, 575, 50, 0xd7e8f5)
@@ -59,7 +65,11 @@ async function start() {
 
     const sendBtn = new Button(
         'Send', () => {
-            console.log(currentInput)
+
+            if (currentInput) {
+                messages.push(`${currentInput}\n`)
+                chatWindow.messages = messages;
+            }
             currentInput = "";
             inputField.input = currentInput;
         },
@@ -68,10 +78,10 @@ async function start() {
         createSpritesContainer(insetTextures, 150, 50)
     );
 
-    txtOutputContainer.addChild(createSpritesContainer(bevelTextures, 750, 475, 0x78a8f5)).position.set(25, 25);
-    txtInputContainer.addChild(inputField);
-    txtInputContainer.position.set(25, 525);
+    txtOutputContainer.addChild(chatWindow).position.set(25, 25);
+    txtInputContainer.addChild(inputField).position.set(25, 525);
     btnContainer.addChild(sendBtn);
+
     btnContainer.position.set(625, 525)
     app.stage.addChild(txtOutputContainer, txtInputContainer, btnContainer);
 
@@ -84,7 +94,10 @@ async function start() {
             currentInput = currentInput.slice(0, currentInput.length - 1);
             inputField.input = currentInput;
         } else if (event.key == 'Enter') {
-            console.log(currentInput)
+            if (currentInput) {
+                messages.push(`${currentInput}\n`)
+                chatWindow.messages = messages;
+            }
             currentInput = "";
             inputField.input = currentInput;
         }

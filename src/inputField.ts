@@ -25,7 +25,6 @@ export class InputField extends Container {
         this.highlight.renderable = false;
         this._input = input;
         this.text = new Text(input, style);
-        // this.text.anchor.set(-0.1, -0.5);
         this.text.position.set(20, 12);
 
         this.addChild(this.text);
