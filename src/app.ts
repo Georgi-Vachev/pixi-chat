@@ -1,7 +1,7 @@
 /* globals io */
 
-import e from 'express';
 import * as PIXI from 'pixi.js';
+import { TextStyle } from 'pixi.js';
 import { Button } from './button';
 import { ChatWindow } from './chatWindow';
 import { InputField } from './inputField';
@@ -81,6 +81,34 @@ function welcomeScreen() {
     usernameInputField.position.set(425, 240);
     enterRoomBtn.position.set(325, 315);
 
+    const welcomeMsg = new PIXI.Text('Welcome to PIXI Chat!', new TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 35,
+        fill: 0xd3daf5,
+    }));
+
+    welcomeMsg.position.x = 222;
+    welcomeMsg.position.y = 50;
+
+    const roomIdMsg = new PIXI.Text('Room ID', new TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 24,
+        fill: 0xffffff
+    }));
+
+    roomIdMsg.position.x = 230;
+    roomIdMsg.position.y = 210;
+
+    const usernameMsg = new PIXI.Text('Username', new TextStyle({
+        fontFamily: 'Arial',
+        fontSize: 24,
+        fill: 0xffffff
+    }));
+
+    usernameMsg.position.x = 470;
+    usernameMsg.position.y = 210;
+
+    app.stage.addChild(welcomeMsg, roomIdMsg, usernameMsg);
     app.stage.addChild(roomInputField, usernameInputField, enterRoomBtn);
 
 }
@@ -110,6 +138,8 @@ async function startChat(messages) {
         app.destroy(true);
     });
 
+    socket.on('error', msg => alert(msg))
+
     const txtOutputContainer = new PIXI.Container();
     const txtInputContainer = new PIXI.Container();
     const btnContainer = new PIXI.Container();
@@ -130,7 +160,7 @@ async function startChat(messages) {
     const sendBtn = new Button(
         'Send', () => {
             if (currentInput) {
-                socket.emit('chat message', currentInput, symbol);
+                socket.emit('chat message', currentInput, username);
             }
             currentInput = "";
             inputField.input = currentInput;
@@ -160,13 +190,13 @@ app.view.addEventListener('click', (e: PointerEvent) => {
         }
     }
     if (roomInputField != undefined && roomInputField.isSelected) {
-        if (!((e.clientX >= 180 && e.clientX <= 370) && (e.clientY >= 230 && e.clientY <= 275))) {
+        if (!((e.clientX >= 180 && e.clientX <= 370) && (e.clientY >= 245 && e.clientY <= 295))) {
             roomInputField.indicator.renderable = false;
             roomInputField.deselect();
         }
     }
     if (usernameInputField != undefined && usernameInputField.isSelected) {
-        if (!((e.clientX >= 430 && e.clientX <= 625) && (e.clientY >= 230 && e.clientY <= 275))) {
+        if (!((e.clientX >= 430 && e.clientX <= 625) && (e.clientY >= 245 && e.clientY <= 295))) {
             usernameInputField.indicator.renderable = false;
             usernameInputField.deselect();
         }
@@ -210,7 +240,7 @@ document.addEventListener('keydown', (event) => {
             inputField.input = currentInput;
         } else if (event.key == 'Enter') {
             if (currentInput) {
-                socket.emit('chat message', currentInput, symbol);
+                socket.emit('chat message', currentInput, username);
             }
             currentInput = "";
             inputField.input = currentInput;

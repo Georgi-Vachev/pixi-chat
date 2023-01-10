@@ -24,11 +24,13 @@ io.on('connect', socket => {
         }
         const users = rooms[roomId];
         const messages = chats[roomId];
-        if (users.size >= 2) {
+        if (users.size >= 3) {
+            console.log('room is full')
             socket.emit('error', 'Room is full!');
             socket.disconnect();
         } else {
             socket.join(roomId);
+            console.log(users.size)
             initChat(roomId, users, socket, messages);
         }
     });
