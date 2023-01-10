@@ -1,5 +1,16 @@
 import * as PIXI from 'pixi.js'
 
+
+export function drawIndicator() {
+    return new PIXI.Graphics()
+        .beginFill(0xFFFFFF)
+        .drawRect(20, 10, 3, 30);
+}
+
+export interface BaseTextures {
+    urlString: PIXI.BaseTexture;
+}
+
 export function createSpritesContainer(textures: PIXI.Texture[][], width?: number, height?: number, tint?: number): PIXI.Container {
     const container = new PIXI.Container();
 
