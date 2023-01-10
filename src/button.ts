@@ -1,6 +1,5 @@
 import { Container, DisplayObject, Text, TextStyle } from 'pixi.js';
 
-
 const style = new TextStyle({
     fontFamily: 'Arial',
     fontSize: 24,

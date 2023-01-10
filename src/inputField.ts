@@ -1,5 +1,4 @@
-import { Container, DisplayObject, Text, TextStyle } from 'pixi.js';
-
+import { Container, DisplayObject, Graphics, Text, TextStyle } from 'pixi.js';
 
 const style = new TextStyle({
     fontFamily: 'Arial',
@@ -11,26 +10,27 @@ const style = new TextStyle({
 export class InputField extends Container {
     _input: string;
     text: Text;
+    isSelected: boolean;
+    indicator: Graphics;
 
     constructor(
         input: string,
-        private callback: () => void,
+        indicator: Graphics,
         private element: DisplayObject,
         private highlight: DisplayObject,
-
+        private selected: DisplayObject,
     ) {
         super();
-
-        this.addChild(this.element, this.highlight);
+        this.indicator = indicator;
+        this.addChild(this.element, this.highlight, this.selected, this.indicator);
         this.highlight.renderable = false;
+        this.selected.renderable = false;
+        this.indicator.renderable = false;
         this._input = input;
         this.text = new Text(input, style);
         this.text.position.set(20, 12);
-
         this.addChild(this.text);
-
         this.interactive = true;
-
         this.on('pointerenter', this.onEnter.bind(this));
         this.on('pointerleave', this.onLeave.bind(this));
         this.on('pointerdown', this.onDown.bind(this));
@@ -56,6 +56,17 @@ export class InputField extends Container {
     }
 
     private onDown() {
-        console.log(this.text.text);
+        this.element.renderable = false;
+        this.highlight.renderable = false;
+        this.selected.renderable = true;
+        this.isSelected = true;
+        this.indicator.renderable = true;
+    }
+
+    deselect() {
+        this.element.renderable = true;
+        this.highlight.renderable = false;
+        this.selected.renderable = false;
+        this.isSelected = false;
     }
 }

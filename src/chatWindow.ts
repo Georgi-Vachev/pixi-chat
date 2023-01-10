@@ -1,11 +1,9 @@
 import { Container, DisplayObject, Text, TextStyle } from 'pixi.js';
 
-
 const style = new TextStyle({
     fontFamily: 'Arial',
     fontSize: 24,
     fill: 0xffffff,
-
 });
 
 export class ChatWindow extends Container {
@@ -17,15 +15,11 @@ export class ChatWindow extends Container {
         private element: DisplayObject,
     ) {
         super();
-
         this.addChild(this.element);
         this.text = new Text(messages.join(""), style);
         this.text.position.set(20, 12);
-
         this._messages = messages;
-
         this.addChild(this.text);
-
         this.interactive = true;
 
         // this.on('pointerenter', this.onEnter.bind(this));
@@ -40,7 +34,6 @@ export class ChatWindow extends Container {
     set messages(value: string[]) {
         this._messages = value;
         this.text.text = value.join("");
-        console.log('sda')
     }
 
     // private onEnter() {
