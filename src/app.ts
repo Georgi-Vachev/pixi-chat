@@ -23,7 +23,6 @@ let usernameInputField;
 let currentInput = "";
 let roomId = '';
 let username = '';
-let symbol = '';
 let socket = null;
 
 //create and append app to body
@@ -121,8 +120,7 @@ function onSubmit() {
         console.log(`You (${username}) entered room ${roomId}`);
     });
 
-    socket.on('symbol', (newSymbol, messages) => {
-        symbol = newSymbol;
+    socket.on('symbol', (messages) => {
         startChat(messages);
     });
 }
@@ -245,6 +243,8 @@ document.addEventListener('keydown', (event) => {
             currentInput = "";
             inputField.input = currentInput;
             inputField.indicator.position.x = 0;
+            inputField.indicator.renderable = false;
+            inputField.deselect();
         }
     }
     if (event.key == 'Enter' && inputField == undefined) {

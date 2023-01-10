@@ -37,12 +37,14 @@ io.on('connect', socket => {
 });
 
 function initChat(roomId, users, socket, messages) {
-    socket.on("chat message", (input, sym) => {
+    let username = '';
+    socket.on("chat message", (input, user) => {
         if (messages.length >= 17) {
             messages.shift();
         }
-        messages.push(`${sym}: ${input}\n`);
+        messages.push(`${user}: ${input}\n`);
         io.to(roomId).emit('chat message', messages);
+        username = user;
     })
 
     socket.on('disconnect', () => {
@@ -50,18 +52,8 @@ function initChat(roomId, users, socket, messages) {
         users.delete(socket);
     });
 
-    let symbol = 'X';
-
-    if (users.size > 0) {
-        const otherSymbol = [...users.values()][0];
-        if (otherSymbol == 'X') {
-            symbol = 'O';
-        }
-    }
-
-    users.set(socket, symbol);
-    console.log('Assigning symbol', symbol);
-    socket.emit('symbol', symbol, messages);
+    users.set(socket, username);
+    socket.emit('symbol', messages);
 };
 
 server.listen(3000, () => console.log('Server is listening on port 3000'));
